@@ -1,0 +1,77 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Opt-in automerge preset for Hartorn-Inc repositories whose full CI test suite and zizmor Gate are required status checks. Extend after github>Hartorn-Inc/.github.",
+  "extends": ["github>Giskard-AI/.github:automerge"],
+  "packageRules": [
+    {
+      "description": "Group and automerge non-major (minor, patch) updates for npm, pep621, and cargo behind required CI tests.",
+      "matchManagers": ["npm", "pep621", "cargo"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "groupName": "{{manager}} dependencies (non-major)",
+      "groupSlug": "{{manager}}-deps-non-major"
+    },
+    {
+      "description": "Group and automerge non-major GitHub Actions uses: updates (action and workflow refs); digest-only tag moves and majors stay manual.",
+      "matchManagers": ["github-actions"],
+      "matchDepTypes": ["action", "workflow"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "groupName": "github-actions dependencies (non-major)",
+      "groupSlug": "github-actions-deps-non-major"
+    },
+    {
+      "description": "Pin digests for Docker Hub images in Dockerfiles and Compose files.",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchPackageNames": [
+        "/^[^./:]+(?:/[^/]+)?$/",
+        "/^(?:docker\\.io|registry-1\\.docker\\.io)\\//",
+        "!localhost/**"
+      ],
+      "pinDigests": true
+    },
+    {
+      "description": "Group and automerge non-major Docker Hub Dockerfile updates (minor, patch, and digest refreshes); non-Docker-Hub registries and majors stay manual.",
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": [
+        "/^[^./:]+(?:/[^/]+)?$/",
+        "/^(?:docker\\.io|registry-1\\.docker\\.io)\\//",
+        "!localhost/**"
+      ],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "groupName": "dockerfile dependencies (non-major)",
+      "groupSlug": "dockerfile-deps-non-major"
+    },
+    {
+      "description": "Group and automerge non-major Docker Hub Compose updates (minor, patch, and digest refreshes); non-Docker-Hub registries and majors stay manual.",
+      "matchManagers": ["docker-compose"],
+      "matchPackageNames": [
+        "/^[^./:]+(?:/[^/]+)?$/",
+        "/^(?:docker\\.io|registry-1\\.docker\\.io)\\//",
+        "!localhost/**"
+      ],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true,
+      "groupName": "docker-compose dependencies (non-major)",
+      "groupSlug": "docker-compose-deps-non-major"
+    },
+    {
+      "description": "Keep Ubuntu release upgrades (minor/major) manual so only same-release digest refreshes join dockerfile-deps-non-major.",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchPackageNames": [
+        "ubuntu",
+        "/^(?:docker\\.io/|registry-1\\.docker\\.io/)?(?:library/)?ubuntu$/"
+      ],
+      "matchUpdateTypes": ["minor", "major"],
+      "automerge": false,
+      "groupName": "ubuntu release",
+      "groupSlug": "ubuntu-release"
+    },
+    {
+      "description": "Require manual review for major updates across all managers.",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    }
+  ]
+}
