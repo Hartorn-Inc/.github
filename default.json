@@ -9,8 +9,6 @@
   "semanticCommits": "enabled",
   "commitMessageAction": "bump",
   "npmrc": "ignore-scripts=true\n",
-  "internalChecksFilter": "strict",
-  "prCreation": "not-pending",
   "rebaseWhen": "behind-base-branch",
   "lockFileMaintenance": {
     "description": "Disabled by default because npm 10 and Cargo lack native release-age cooldowns; repos with uv exclude-newer or pnpm minimumReleaseAge can re-enable it.",
